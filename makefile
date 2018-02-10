@@ -15,7 +15,10 @@ dht.o : dht.c
 	$(CC) $(CFLAGS) -Os -c dht.c
 
 load: program.hex
-	avrdude -c usbasp -p m8 -u -U flash:w:program.hex
+	avrdude -c usbasp -p m8 -u -U flash:w:program.hex	
+
+fusesRC:
+	avrdude -c usbasp -p m8 -U lfuse:w:0xe4:m -U hfuse:w:0xd9:m # RC (8MHz)
 
 clean:
 	rm -f *.o *.map *.out *.hex
