@@ -1,4 +1,6 @@
-Small temperature/humidity display
-with 7-segment display and multiplexing
-https://github.com/nczeroshift/display_7seg_temp
- 
+# Temperature/Humidity display
+Multiplexed driven display with Atmega8 and DHT22
+
+## Libraries
+DHT driver from Davide Gironi
+
