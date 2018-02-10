@@ -56,47 +56,47 @@ unsigned char map[13] = {
 };
 
 void setChar(unsigned char code){
-	unsigned mask = code;
+    unsigned mask = code;
 
     if(mask & 0b00000001)
-		PORTD &= ~(1<<PD2);
-	else
-		PORTD |= (1<<PD2);
+        PORTD &= ~(1<<PD2);
+    else
+        PORTD |= (1<<PD2);
 
-	if(mask & 0b00000010)
-		PORTC &= ~(1<<PC1);
-	else
-		PORTC |= (1<<PC1);
+    if(mask & 0b00000010)
+        PORTC &= ~(1<<PC1);
+    else
+        PORTC |= (1<<PC1);
 
-	if(mask & 0b00000100)
-		PORTB &= ~(1<<PB5);
-	else
-		PORTB |= (1<<PB5);
+    if(mask & 0b00000100)
+        PORTB &= ~(1<<PB5);
+    else
+        PORTB |= (1<<PB5);
 
-	if(mask & 0b00001000)
-		PORTB &= ~(1<<PB4);
-	else
-		PORTB |= (1<<PB4);
+    if(mask & 0b00001000)
+        PORTB &= ~(1<<PB4);
+    else
+        PORTB |= (1<<PB4);
 
-	if(mask & 0b00010000)
-		PORTD &= ~(1<<PD6);
-	else
-		PORTD |= (1<<PD6);
+    if(mask & 0b00010000)
+        PORTD &= ~(1<<PD6);
+    else
+        PORTD |= (1<<PD6);
 
-	if(mask & 0b00100000)
-		PORTD &= ~(1<<PD7);
-	else
-		PORTD |= (1<<PD7);
+    if(mask & 0b00100000)
+        PORTD &= ~(1<<PD7);
+    else
+        PORTD |= (1<<PD7);
 
-	if(mask & 0b01000000)
-		PORTB &= ~(1<<PB0);
-	else
-		PORTB |= (1<<PB0);
+    if(mask & 0b01000000)
+        PORTB &= ~(1<<PB0);
+    else
+        PORTB |= (1<<PB0);
 
-	if(mask & 0b10000000)
-		PORTB &= ~(1<<PB3);
-	else
-		PORTB |= (1<<PB3);
+    if(mask & 0b10000000)
+        PORTB &= ~(1<<PB3);
+    else
+        PORTB |= (1<<PB3);
 }
 
 // PD4 - Display 8
@@ -109,77 +109,77 @@ void setChar(unsigned char code){
 // PC2 - Display 1
 
 void setDisplay(unsigned char mask){
-	if(mask & 0b00000001)
-		PORTC |= (1<<PC2);
-	else
-		PORTC &= ~(1<<PC2);
+    if(mask & 0b00000001)
+        PORTC |= (1<<PC2);
+    else
+        PORTC &= ~(1<<PC2);
 
-	if(mask & 0b00000010)
-		PORTD |= (1<<PD1);
-	else
-		PORTD &= ~(1<<PD1);
+    if(mask & 0b00000010)
+        PORTD |= (1<<PD1);
+    else
+        PORTD &= ~(1<<PD1);
 
-	if(mask & 0b00000100)
-		PORTC |= (1<<PC3);
-	else
-		PORTC &= ~(1<<PC3);
+    if(mask & 0b00000100)
+        PORTC |= (1<<PC3);
+    else
+        PORTC &= ~(1<<PC3);
 
-	if(mask & 0b00001000)
-		PORTD |= (1<<PD0);
-	else
-		PORTD &= ~(1<<PD0);
+    if(mask & 0b00001000)
+        PORTD |= (1<<PD0);
+    else
+        PORTD &= ~(1<<PD0);
 
-	if(mask & 0b00010000)
-		PORTD |= (1<<PD5);
-	else
-		PORTD &= ~(1<<PD5);
+    if(mask & 0b00010000)
+        PORTD |= (1<<PD5);
+    else
+        PORTD &= ~(1<<PD5);
 
-	if(mask & 0b00100000)
-		PORTB |= (1<<PB7);
-	else
-		PORTB &= ~(1<<PB7);
+    if(mask & 0b00100000)
+        PORTB |= (1<<PB7);
+    else
+        PORTB &= ~(1<<PB7);
 
-	if(mask & 0b01000000)
-		PORTB |= (1<<PB6);
-	else
-		PORTB &= ~(1<<PB6);
+    if(mask & 0b01000000)
+        PORTB |= (1<<PB6);
+    else
+        PORTB &= ~(1<<PB6);
 
-	if(mask & 0b10000000)
-		PORTD |= (1<<PD4);
-	else
-		PORTD &= ~(1<<PD4);
+    if(mask & 0b10000000)
+        PORTD |= (1<<PD4);
+    else
+        PORTD &= ~(1<<PD4);
 }
 
 void TIMER0_Init(void){
-	TCCR0 = (1 << CS01)  ; // 1024 CPU divisor
-	TIMSK |= (1 << TOIE0); // Enable overflow interrupt
-	TCNT0 = 0; // Start counting from 0
+    TCCR0 = (1 << CS01)  ; // 1024 CPU divisor
+    TIMSK |= (1 << TOIE0); // Enable overflow interrupt
+    TCNT0 = 0; // Start counting from 0
 }
 
 
 ISR(TIMER0_OVF_vect){
-	const char ch = text_buffer[char_id];
-    
+    const char ch = text_buffer[char_id];
+
     setChar(0);
-	setDisplay(1 << digit_id);
+    setDisplay(1 << digit_id);
 
     uint8_t mapped_digit = 0;
 
     if(ch >= '0' && ch <= '9')
         mapped_digit = map[1 + ch -'0'];
-	else if(ch == '-') 
+    else if(ch == '-') 
         mapped_digit = map[12];
 
     if(text_buffer[char_id+1] == '.'){
         mapped_digit |= 0b10000000;
     }
     else{
-	    digit_id++;
+        digit_id++;
         if(digit_id > 7)
             digit_id = 0;
     }
 
-	setChar(mapped_digit);
+    setChar(mapped_digit);
     char_id++;
 
     if(text_buffer[char_id] == '\0'){
@@ -187,15 +187,15 @@ ISR(TIMER0_OVF_vect){
         digit_id=0;
     }
 
-    TCNT0 = 0; // Restart counting from 0(it's unnecessary due to overflow)	
+    TCNT0 = 0; // Restart counting from 0(it's unnecessary due to overflow)    
     time++;
 }
 
 
 void resetIO(void){
     DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB3) | (1<<PB4) | (1<<PB5) | (1<<PB6) | (1<<PB7);
-	DDRD |= (1<<PD0) | (1<<PD1) | (1<<PD2) | (1<<PD3) | (1<<PD4) | (1<<PD5) | (1<<PD6) | (1<<PD7);
-	DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
+    DDRD |= (1<<PD0) | (1<<PD1) | (1<<PD2) | (1<<PD3) | (1<<PD4) | (1<<PD5) | (1<<PD6) | (1<<PD7);
+    DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
 }
 
 void printVal(float value, char * buffer){
@@ -214,23 +214,22 @@ int main(void)
     dht_gettemperaturehumidity(&temp, &hum);
 
     resetIO();
+    TIMER0_Init();
+    sei();
 
-	TIMER0_Init();
+    // Test all segments.
+    strcpy(text_buffer,"8.8.8.8.8.8.8.8.");    
 
-	sei();
-	
-	strcpy(text_buffer,"8.8.8.8.8.8.8.8.");	
-    
     time = REFRESH_TIME_NEXT;
 
     while(1){
         if((time++) > REFRESH_TIME){
-            cli();	
-         
+            cli();    
+
             memset(text_buffer, 0, 32); 
- 
+
             int ret = dht_gettemperaturehumidity(&temp, &hum);
-  
+
             if(ret < 0){
                 sprintf(text_buffer,"%d",ret);
                 time = REFRESH_TIME_NEXT;
@@ -239,14 +238,14 @@ int main(void)
                 printVal(hum,text_buffer+5);
                 time = 0;        
             }      
-            
+
             resetIO();    
             digit_id = 0;
             char_id = 0;
 
             sei();
         }
-	}
+    }
 
-	return 0;
+    return 0;
 }
